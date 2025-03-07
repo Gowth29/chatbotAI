@@ -1,0 +1,7 @@
+llama-cpp-python
+langchain
+sentence-transformers
+chromadb
+fastapi
+uvicorn
+pydantic

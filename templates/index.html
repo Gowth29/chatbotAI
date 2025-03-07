@@ -149,8 +149,51 @@
     }
 
     function showChatHistory() {
-      alert("Chat history feature coming soon");
+      alert("Chat history feature coming soon!");
     }
   </script>
+  <script>
+    async function sendMessage() {
+    const inputField = document.getElementById("userInput");
+    const userMessage = inputField.value.trim();
+    const messagesDiv = document.getElementById("messages");  // Correct container
+
+    if (!userMessage) return;  // Prevent sending empty messages
+
+    // Add user message
+    const userMsgElement = document.createElement("div");
+    userMsgElement.className = "message user";
+    userMsgElement.textContent = "You: " + userMessage;
+    messagesDiv.appendChild(userMsgElement);
+
+    inputField.value = ""; // Clear input field
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Auto-scroll down
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: userMessage }),
+        });
+
+        const data = await response.json();
+
+        // Add bot response
+        const botMsgElement = document.createElement("div");
+        botMsgElement.className = "message bot";
+        botMsgElement.textContent = "Bot: " + data.response;
+        messagesDiv.appendChild(botMsgElement);
+
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Auto-scroll down
+    } catch (error) {
+        console.error("Error sending message:", error);
+        const botErrorElement = document.createElement("div");
+        botErrorElement.className = "message bot";
+        botErrorElement.textContent = "Bot: Sorry, something went wrong.";
+        messagesDiv.appendChild(botErrorElement);
+    }
+}
+
+</script>
 </body>
 </html>
